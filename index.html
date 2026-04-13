@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Kedai Kopi</title>
+
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial;
+        background: #f5f5f5;
+      }
+
+      .header {
+        background: #ff5722;
+        color: white;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .banner {
+        background: linear-gradient(to right, orange, red);
+        color: white;
+        text-align: center;
+        padding: 20px;
+      }
+
+      .kategori {
+        display: flex;
+        justify-content: space-around;
+        background: white;
+        padding: 10px;
+      }
+
+      .container {
+        display: flex;
+      }
+
+      .produk {
+        width: 70%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        padding: 15px;
+      }
+
+      .card {
+        background: white;
+        padding: 10px;
+        border-radius: 10px;
+        position: relative;
+      }
+
+      .jenis {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: orange;
+        color: white;
+        font-size: 12px;
+        padding: 4px;
+        border-radius: 5px;
+      }
+
+      .card img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+
+      .card p {
+        color: red;
+        font-weight: bold;
+      }
+
+      button {
+        background: #ff5722;
+        color: white;
+        border: none;
+        padding: 8px;
+        margin-top: 5px;
+        cursor: pointer;
+        border-radius: 5px;
+      }
+
+      .cart {
+        width: 30%;
+        background: white;
+        padding: 15px;
+      }
+
+      .cart-item {
+        border-bottom: 1px solid #ddd;
+        padding: 5px 0;
+      }
+
+      .total {
+        font-weight: bold;
+        margin-top: 10px;
+      }
+
+      .map {
+        padding: 15px;
+      }
+
+      .footer {
+        background: #ff5722;
+        color: white;
+        text-align: center;
+        padding: 15px;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h2>Kedai Kopi senja daun☕</h2>
+    </div>
+
+    <div class="banner">
+      <h3>🔥 Promo Kopi Hari Ini 🔥</h3>
+    </div>
+
+    <div class="kategori">
+      <div>Arabica</div>
+      <div>Robusta</div>
+      <div>Espresso</div>
+      <div>Manual Brew</div>
+    </div>
+
+    <div class="container">
+      <div class="produk">
+        <div class="card">
+          <div class="jenis">Arabica</div>
+          <img
+            src="https://images.unsplash.com/photo-1509042239860-f550ce710b93"
+          />
+          <h3>Kopi Gayo</h3>
+          <p>30000</p>
+          <button onclick="tambahKeranjang('Kopi Gayo', 30000)">Beli</button>
+        </div>
+
+        <div class="card">
+          <div class="jenis">Robusta</div>
+          <img
+            src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085"
+          />
+          <h3>Kopi Lampung</h3>
+          <p>22000</p>
+          <button onclick="tambahKeranjang('Kopi Lampung', 22000)">Beli</button>
+        </div>
+
+        <div class="card">
+          <div class="jenis">Espresso</div>
+          <img
+            src="https://images.unsplash.com/photo-1511920170033-f8396924c348"
+          />
+          <h3>Espresso Shot</h3>
+          <p>15000</p>
+          <button onclick="tambahKeranjang('Espresso Shot', 15000)">
+            Beli
+          </button>
+        </div>
+
+        <div class="card">
+          <div class="jenis">Manual Brew</div>
+          <img
+            src="https://images.unsplash.com/photo-1507133750040-4a8f57021571"
+          />
+          <h3>V60 Coffee</h3>
+          <p>28000</p>
+          <button onclick="tambahKeranjang('V60 Coffee', 28000)">Beli</button>
+        </div>
+      </div>
+
+      <div class="cart">
+        <h2>🛒 Keranjang</h2>
+        <div id="list-cart"></div>
+        <div class="total">Total: Rp <span id="total">0</span></div>
+        <button onclick="checkoutWA()">Checkout via WhatsApp</button>
+      </div>
+    </div>
+
+    <!-- MAP -->
+    <div class="map">
+      <h3>📍 Lokasi Kedai</h3>
+      <iframe
+        src="https://www.google.com/maps?q=Medan&output=embed"
+        width="100%"
+        height="250"
+        style="border: 0; border-radius: 10px"
+      >
+      </iframe>
+      <br /><br />
+      <a href="https://www.google.com/maps?q=Medan" target="_blank">
+        <button>📍 Lihat di Google Maps</button>
+      </a>
+    </div>
+
+    <footer class="footer">
+      <p>📞 Hubungi Kami: 081912367278</p>
+      <p>📍 Alamat: Jl. Kopi Nikmat No. 10, Medan</p>
+    </footer>
+
+    <script>
+      let cart = [];
+
+      function tambahKeranjang(nama, harga) {
+        cart.push({ nama, harga });
+        tampilkanCart();
+      }
+
+      function tampilkanCart() {
+        let list = document.getElementById("list-cart");
+        let total = 0;
+        list.innerHTML = "";
+
+        cart.forEach((item, index) => {
+          total += item.harga;
+
+          list.innerHTML += `
+            <div class="cart-item">
+                ${item.nama} - Rp ${item.harga}
+                <button onclick="hapusItem(${index})">X</button>
+            </div>
+        `;
+        });
+
+        document.getElementById("total").innerText = total;
+      }
+
+      function hapusItem(index) {
+        cart.splice(index, 1);
+        tampilkanCart();
+      }
+
+      function checkoutWA() {
+        if (cart.length === 0) {
+          alert("Keranjang kosong!");
+          return;
+        }
+
+        let pesan = "Halo, saya ingin memesan:%0A";
+        let total = 0;
+
+        cart.forEach((item) => {
+          pesan += `- ${item.nama} (Rp ${item.harga})%0A`;
+          total += item.harga;
+        });
+
+        pesan += `%0ATotal: Rp ${total}`;
+        pesan += `%0AAlamat Kedai: Jl. Kopi Nikmat No. 10, Medan`;
+
+        let noWA = "081912367278";
+
+        let url = `https://wa.me/${noWA}?text=${pesan}`;
+        window.open(url, "_blank");
+      }
+    </script>
+  </body>
+</html>
