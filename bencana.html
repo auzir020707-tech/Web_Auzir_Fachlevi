@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-Voting Modern</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif}
+
+body{
+    background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    color:white;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px;
+    background:rgba(255,255,255,0.05);
+    backdrop-filter:blur(10px);
+}
+
+.menu{
+    display:flex;
+    align-items:center;
+}
+
+.menu button{
+    margin-left:10px;
+    padding:10px 18px;
+    border:none;
+    border-radius:30px;
+    background:rgba(255,255,255,0.1);
+    color:white;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.menu button.active,
+.menu button:hover{
+    background:linear-gradient(45deg,#00c6ff,#0072ff);
+}
+
+.profile{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    margin-left:15px;
+    border:2px solid #00c6ff;
+}
+
+.container{padding:20px}
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:15px;
+}
+
+.card{
+    padding:15px;
+    border-radius:15px;
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(10px);
+}
+
+.main{
+    margin-top:30px;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:25px;
+}
+
+.box{
+    width:350px;
+    padding:25px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.07);
+    backdrop-filter:blur(15px);
+    animation:fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;transform:translateY(10px)}
+    to{opacity:1;transform:translateY(0)}
+}
+
+input{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    margin-bottom:10px;
+}
+
+.opsi{
+    padding:12px;
+    border-radius:10px;
+    margin:6px 0;
+    background:rgba(255,255,255,0.15);
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.opsi:hover{transform:scale(1.05)}
+.selected{background:linear-gradient(45deg,#00c6ff,#0072ff)}
+
+.vote{
+    margin-top:10px;
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:linear-gradient(45deg,#00c6ff,#0072ff);
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.bar{
+    height:10px;
+    background:rgba(255,255,255,0.2);
+    border-radius:10px;
+}
+
+.fill{
+    height:10px;
+    background:linear-gradient(45deg,#00c6ff,#0072ff);
+    border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h2>🌐 E-Voting Bantuan untuk korban bencana</h2>
+    <div class="menu">
+        <button id="btnVoting" onclick="showPage('voting')">Voting</button>
+        <button id="btnHasil" onclick="showPage('hasil')">Hasil</button>
+        <button id="btnAdmin" onclick="showPage('admin')">Admin</button>
+        <img src="https://i.pravatar.cc/100" class="profile">
+    </div>
+</div>
+
+<div class="container">
+
+<div class="stats">
+    <div class="card">🏠 Desa: karieng</div>
+    <div class="card">👥 Pemilih: <span id="pemilih">0</span></div>
+    <div class="card">📦 Bantuan: 3</div>
+    <div class="card">🟢 Status: Aktif</div>
+</div>
+
+<div class="main">
+
+<div id="votingPage" class="box">
+    <h3>pilihan bantuan</h3>
+    <input type="text" id="nik" placeholder="Masukkan NIK">
+
+    <div class="opsi" onclick="pilih('beras',this)">🍚 Beras</div>
+    <div class="opsi" onclick="pilih('uang',this)">💰 Uang</div>
+    <div class="opsi" onclick="pilih('bibit',this)">🌱 Bibit</div>
+
+    <button class="vote" onclick="vote()">Kirim</button>
+</div>
+
+<div id="hasilPage" class="box" style="display:none">
+    <h3>Hasil Voting</h3>
+
+    Beras: <span id="beras">0</span>
+    <div class="bar"><div id="b1" class="fill"></div></div>
+
+    Uang: <span id="uang">0</span>
+    <div class="bar"><div id="b2" class="fill"></div></div>
+
+    Bibit: <span id="bibit">0</span>
+    <div class="bar"><div id="b3" class="fill"></div></div>
+</div>
+
+<div id="adminPage" class="box" style="display:none">
+    <h3>Admin</h3>
+    <button class="vote" onclick="resetData()">Reset Data</button>
+</div>
+
+<div class="box">
+    <h3>Grafik</h3>
+    <canvas id="chart"></canvas>
+</div>
+
+</div>
+</div>
+
+<script>
+let data = JSON.parse(localStorage.getItem('data')) || {beras:0, uang:0, bibit:0};
+let pemilih = JSON.parse(localStorage.getItem('pemilih')) || [];
+let pilihan=null;
+
+function setActive(btn){
+    document.querySelectorAll('.menu button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+}
+
+function showPage(p){
+    document.getElementById('votingPage').style.display='none';
+    document.getElementById('hasilPage').style.display='none';
+    document.getElementById('adminPage').style.display='none';
+
+    if(p==='voting'){document.getElementById('votingPage').style.display='block';setActive(btnVoting)}
+    if(p==='hasil'){document.getElementById('hasilPage').style.display='block';setActive(btnHasil)}
+    if(p==='admin'){document.getElementById('adminPage').style.display='block';setActive(btnAdmin)}
+}
+
+function pilih(p,e){
+    pilihan=p;
+    document.querySelectorAll('.opsi').forEach(o=>o.classList.remove('selected'));
+    e.classList.add('selected');
+}
+
+function vote(){
+    let nik=document.getElementById('nik').value;
+
+    if(!nik) return alert('Isi NIK');
+    if(pemilih.includes(nik)) return alert('Sudah memilih');
+    if(!pilihan) return alert('Pilih bantuan');
+
+    data[pilihan]++;
+    pemilih.push(nik);
+
+    localStorage.setItem('data',JSON.stringify(data));
+    localStorage.setItem('pemilih',JSON.stringify(pemilih));
+
+    update();
+}
+
+function resetData(){
+    if(confirm("Reset semua data?")){
+        localStorage.clear();
+        location.reload();
+    }
+}
+
+let chart;
+function buatChart(){
+    chart=new Chart(document.getElementById('chart'),{
+        type:'pie',
+        data:{
+            labels:['Beras','Uang','Bibit'],
+            datasets:[{
+                data:[data.beras,data.uang,data.bibit]
+            }]
+        }
+    });
+}
+
+function update(){
+    let total=data.beras+data.uang+data.bibit;
+
+    document.getElementById('beras').innerText=data.beras;
+    document.getElementById('uang').innerText=data.uang;
+    document.getElementById('bibit').innerText=data.bibit;
+    document.getElementById('pemilih').innerText=pemilih.length;
+
+    document.getElementById('b1').style.width= total? (data.beras/total*100)+'%':'0%';
+    document.getElementById('b2').style.width= total? (data.uang/total*100)+'%':'0%';
+    document.getElementById('b3').style.width= total? (data.bibit/total*100)+'%':'0%';
+
+    chart.data.datasets[0].data=[data.beras,data.uang,data.bibit];
+    chart.update();
+}
+
+buatChart();
+update();
+showPage('voting');
+</script>
+
+</body>
+</html>
