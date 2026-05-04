@@ -2,261 +2,266 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <title>Kedai Kopi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Senja Coffee Premium</title>
 
     <style>
+      :root {
+        --primary: #c67c4e;
+        --dark: #0b0b0b;
+        --card: #141414;
+        --glass: rgba(255, 255, 255, 0.05);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
       body {
         margin: 0;
-        font-family: Arial;
-        background: #f5f5f5;
+        font-family: "Inter", sans-serif;
+        background: var(--dark);
+        color: #fff;
       }
 
-      .header {
-        background: #ff5722;
-        color: white;
-        padding: 15px;
+      /* NAV MODERN */
+      nav {
         display: flex;
         justify-content: space-between;
+        align-items: center;
+        padding: 15px 30px;
+        position: fixed;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       }
 
-      .banner {
-        background: linear-gradient(to right, orange, red);
+      nav h2 {
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      nav a {
+        color: #ddd;
+        text-decoration: none;
+        margin-left: 20px;
+        transition: 0.3s;
+      }
+
+      nav a:hover {
         color: white;
+      }
+
+      /* HERO PREMIUM */
+      .hero {
+        height: 100vh;
+        background:
+          linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9)),
+          url("https://images.unsplash.com/photo-1442512595331-e89e73853f31")
+            center/cover;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         text-align: center;
         padding: 20px;
       }
 
-      .kategori {
-        display: flex;
-        justify-content: space-around;
-        background: white;
-        padding: 10px;
+      .hero h1 {
+        font-size: 48px;
+        max-width: 700px;
+        line-height: 1.3;
+        font-weight: 600;
+        animation: fadeUp 1.5s ease;
       }
 
-      .container {
-        display: flex;
+      .hero p {
+        color: #aaa;
+        margin-top: 10px;
       }
 
-      .produk {
-        width: 70%;
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* MENU */
+      .menu {
+        padding: 120px 30px 60px;
+      }
+
+      .menu h2 {
+        text-align: center;
+        margin-bottom: 40px;
+        font-size: 28px;
+      }
+
+      .grid {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 15px;
-        padding: 15px;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 25px;
       }
 
       .card {
-        background: white;
-        padding: 10px;
-        border-radius: 10px;
-        position: relative;
+        background: var(--card);
+        border-radius: 20px;
+        overflow: hidden;
+        transition: 0.3s;
+        border: 1px solid rgba(255, 255, 255, 0.05);
       }
 
-      .jenis {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        background: orange;
-        color: white;
-        font-size: 12px;
-        padding: 4px;
-        border-radius: 5px;
+      .card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
       }
 
       .card img {
         width: 100%;
-        height: 150px;
+        height: 200px;
         object-fit: cover;
-        border-radius: 10px;
       }
 
-      .card p {
-        color: red;
-        font-weight: bold;
+      .card-content {
+        padding: 18px;
+      }
+
+      .card h3 {
+        margin: 0;
+      }
+
+      .price {
+        margin-top: 8px;
+        color: var(--primary);
+        font-weight: 600;
       }
 
       button {
-        background: #ff5722;
-        color: white;
+        width: 100%;
+        background: var(--primary);
         border: none;
-        padding: 8px;
-        margin-top: 5px;
+        padding: 12px;
+        border-radius: 10px;
+        margin-top: 15px;
         cursor: pointer;
-        border-radius: 5px;
+        font-weight: 600;
+        transition: 0.3s;
       }
 
-      .cart {
-        width: 30%;
-        background: white;
-        padding: 15px;
+      button:hover {
+        background: #e09b65;
       }
 
-      .cart-item {
-        border-bottom: 1px solid #ddd;
-        padding: 5px 0;
-      }
-
-      .total {
-        font-weight: bold;
-        margin-top: 10px;
-      }
-
-      .map {
-        padding: 15px;
-      }
-
-      .footer {
-        background: #ff5722;
-        color: white;
+      /* FOOTER */
+      footer {
         text-align: center;
-        padding: 15px;
-        margin-top: 20px;
+        padding: 30px 20px;
+        background: #000;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+      }
+
+      footer p {
+        margin: 5px 0;
+        color: #aaa;
+      }
+
+      /* RESPONSIVE */
+      @media (max-width: 768px) {
+        .hero h1 {
+          font-size: 30px;
+        }
       }
     </style>
   </head>
+
   <body>
-    <div class="header">
-      <h2>Kedai Kopi senja daun☕</h2>
-    </div>
-
-    <div class="banner">
-      <h3>🔥 Promo Kopi Hari Ini 🔥</h3>
-    </div>
-
-    <div class="kategori">
-      <div>Arabica</div>
-      <div>Robusta</div>
-      <div>Espresso</div>
-      <div>Manual Brew</div>
-    </div>
-
-    <div class="container">
-      <div class="produk">
-        <div class="card">
-          <div class="jenis">Arabica</div>
-          <img
-            src="https://images.unsplash.com/photo-1509042239860-f550ce710b93"
-          />
-          <h3>Kopi Gayo</h3>
-          <p>30000</p>
-          <button onclick="tambahKeranjang('Kopi Gayo', 30000)">Beli</button>
-        </div>
-
-        <div class="card">
-          <div class="jenis">Robusta</div>
-          <img
-            src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085"
-          />
-          <h3>Kopi Lampung</h3>
-          <p>22000</p>
-          <button onclick="tambahKeranjang('Kopi Lampung', 22000)">Beli</button>
-        </div>
-
-        <div class="card">
-          <div class="jenis">Espresso</div>
-          <img
-            src="https://images.unsplash.com/photo-1511920170033-f8396924c348"
-          />
-          <h3>Espresso Shot</h3>
-          <p>15000</p>
-          <button onclick="tambahKeranjang('Espresso Shot', 15000)">
-            Beli
-          </button>
-        </div>
-
-        <div class="card">
-          <div class="jenis">Manual Brew</div>
-          <img
-            src="https://images.unsplash.com/photo-1507133750040-4a8f57021571"
-          />
-          <h3>V60 Coffee</h3>
-          <p>28000</p>
-          <button onclick="tambahKeranjang('V60 Coffee', 28000)">Beli</button>
-        </div>
+    <nav>
+      <h2>☕ Senja Coffee</h2>
+      <div>
+        <a href="#">Home</a>
+        <a href="#menu">Menu</a>
       </div>
+    </nav>
 
-      <div class="cart">
-        <h2>🛒 Keranjang</h2>
-        <div id="list-cart"></div>
-        <div class="total">Total: Rp <span id="total">0</span></div>
-        <button onclick="checkoutWA()">Checkout via WhatsApp</button>
+    <div class="hero">
+      <div>
+        <h1>Pengalaman Kopi Premium, Seperti di Kafe Dunia</h1>
+        <p>Dibuat dari biji kopi terbaik Aceh</p>
       </div>
     </div>
 
-    <!-- MAP -->
-    <div class="map">
-      <h3>📍 Lokasi Kedai</h3>
+    <div class="menu" id="menu">
+      <h2>Menu Favorit</h2>
+
+      <div class="grid">
+        <div class="card">
+          <img
+            src="https://images.pexels.com/photos/5169122/pexels-photo-5169122.jpeg"
+          />
+          <div class="card-content">
+            <h3>Espresso</h3>
+            <div class="price">Rp 15.000</div>
+            <button onclick="beliWA('Espresso', 15000)">Pesan Sekarang</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <img
+            src="https://images.pexels.com/photos/2638019/pexels-photo-2638019.jpeg"
+          />
+          <div class="card-content">
+            <h3>Cappuccino</h3>
+            <div class="price">Rp 15.000</div>
+            <button onclick="beliWA('Cappuccino', 15000)">
+              Pesan Sekarang
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <img
+            src="https://images.pexels.com/photos/19055690/pexels-photo-19055690.jpeg"
+          />
+          <div class="card-content">
+            <h3>kopi susu</h3>
+            <div class="price">Rp 12.000</div>
+            <button onclick="beliWA('kopi susu', 12000)">Pesan Sekarang</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAP SECTION -->
+    <div style="padding: 40px 20px; text-align: center">
+      <h2>Lokasi Kami</h2>
+      <p style="color: #aaa">Temukan kedai kami dengan mudah</p>
+      <br />
       <iframe
-        src="https://www.google.com/maps?q=Medan&output=embed"
+        src="https://www.google.com/maps?q=Aceh&output=embed"
         width="100%"
-        height="250"
-        style="border: 0; border-radius: 10px"
+        height="300"
+        style="border: 0; border-radius: 15px"
       >
       </iframe>
       <br /><br />
-      <a href="https://www.google.com/maps?q=Medan" target="_blank">
-        <button>📍 Lihat di Google Maps</button>
+      <a href="https://www.google.com/maps?q=Aceh" target="_blank">
+        <button style="max-width: 250px">📍 Buka di Google Maps</button>
       </a>
     </div>
 
-    <footer class="footer">
-      <p>📞 Hubungi Kami: 081912367278</p>
-      <p>📍 Alamat: Jl. Kopi Nikmat No. 10, Medan</p>
+    <footer>
+      <p>📍 Aceh, Indonesia</p>
+      <p>📞 0895611529242</p>
     </footer>
 
     <script>
-      let cart = [];
-
-      function tambahKeranjang(nama, harga) {
-        cart.push({ nama, harga });
-        tampilkanCart();
-      }
-
-      function tampilkanCart() {
-        let list = document.getElementById("list-cart");
-        let total = 0;
-        list.innerHTML = "";
-
-        cart.forEach((item, index) => {
-          total += item.harga;
-
-          list.innerHTML += `
-            <div class="cart-item">
-                ${item.nama} - Rp ${item.harga}
-                <button onclick="hapusItem(${index})">X</button>
-            </div>
-        `;
-        });
-
-        document.getElementById("total").innerText = total;
-      }
-
-      function hapusItem(index) {
-        cart.splice(index, 1);
-        tampilkanCart();
-      }
-
-      function checkoutWA() {
-        if (cart.length === 0) {
-          alert("Keranjang kosong!");
-          return;
-        }
-
-        let pesan = "Halo, saya ingin memesan:%0A";
-        let total = 0;
-
-        cart.forEach((item) => {
-          pesan += `- ${item.nama} (Rp ${item.harga})%0A`;
-          total += item.harga;
-        });
-
-        pesan += `%0ATotal: Rp ${total}`;
-        pesan += `%0AAlamat Kedai: Jl. Kopi Nikmat No. 10, Medan`;
-
-        let noWA = "081912367278";
-
-        let url = `https://wa.me/${noWA}?text=${pesan}`;
-        window.open(url, "_blank");
+      function beliWA(nama, harga) {
+        let pesan = `Halo, saya ingin pesan:%0A- ${nama} (Rp ${harga})`;
+        window.open(`https://wa.me/62895611529242?text=${pesan}`);
       }
     </script>
   </body>
