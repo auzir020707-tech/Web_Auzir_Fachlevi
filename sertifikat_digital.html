@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Papan Sertifikat Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+<style>
+/* ─── ROOT ───────────────────────────────────────────────────── */
+:root {
+  --bg:        #070d19;
+  --surface:   #0f1623;
+  --surface2:  #151d2e;
+  --border:    #1e2d45;
+  --border2:   #243350;
+  --accent:    #3b82f6;
+  --accent2:   #60a5fa;
+  --teal:      #14b8a6;
+  --green:     #22c55e;
+  --red:       #ef4444;
+  --yellow:    #f59e0b;
+  --text:      #e8f0fc;
+  --text2:     #94a3b8;
+  --text3:     #4f6480;
+  --hover:     #111827;
+  --radius:    10px;
+  --glow:      0 0 0 1px rgba(59,130,246,.15), 0 4px 24px rgba(0,0,0,.4);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 28px 16px 56px;
+  background-image:
+    radial-gradient(ellipse 60% 40% at 20% -10%, rgba(59,130,246,.08) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 35% at 80% 110%, rgba(20,184,166,.06) 0%, transparent 70%);
+}
+
+/* ─── HEADER ─────────────────────────────────────────────────── */
+.header {
+  max-width: 1000px;
+  margin: 0 auto 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.header-brand { display: flex; align-items: center; gap: 14px; }
+
+.brand-icon {
+  width: 46px; height: 46px;
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+  box-shadow: 0 0 0 1px rgba(139,92,246,.3), 0 8px 24px rgba(59,130,246,.2);
+}
+
+.brand-title {
+  font-size: 18px; font-weight: 700; letter-spacing: -0.4px;
+  background: linear-gradient(135deg, #e8f0fc, #94a3b8);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.brand-sub { font-size: 12px; color: var(--text3); margin-top: 3px; letter-spacing: .2px; }
+
+.header-right { display: flex; align-items: center; gap: 10px; }
+
+.badge-mode {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 600;
+  padding: 5px 12px; border-radius: 20px;
+  background: var(--surface2); border: 1px solid var(--border2);
+  color: var(--text3); white-space: nowrap; transition: all .3s;
+}
+.badge-mode.admin {
+  background: rgba(34,197,94,.08); border-color: rgba(34,197,94,.3);
+  color: var(--green); text-shadow: 0 0 12px rgba(34,197,94,.4);
+}
+
+/* ─── BUTTONS ─────────────────────────────────────────────────── */
+.btn {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px; font-weight: 600;
+  padding: 9px 18px; border: none; border-radius: var(--radius);
+  cursor: pointer; transition: all .18s;
+  display: inline-flex; align-items: center; gap: 7px;
+  letter-spacing: .1px;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0) scale(.97); }
+
+.btn-accent {
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(59,130,246,.35);
+}
+.btn-accent:hover { box-shadow: 0 6px 20px rgba(59,130,246,.5); }
+
+.btn-green {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(34,197,94,.3);
+}
+.btn-red {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(239,68,68,.3);
+}
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--text2);
+}
+.btn-ghost:hover { border-color: var(--accent); color: var(--accent2); background: rgba(59,130,246,.05); }
+
+.btn-purple {
+  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(139,92,246,.35);
+}
+.btn-teal {
+  background: linear-gradient(135deg, #14b8a6, #0d9488);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(20,184,166,.35);
+}
+.btn-sm { font-size: 11px; padding: 5px 11px; border-radius: 7px; }
+
+/* ─── MAIN CARD ──────────────────────────────────────────────── */
+.card {
+  max-width: 1000px; margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: var(--glow);
+}
+
+.card-toolbar {
+  padding: 16px 20px;
+  display: flex; align-items: center; gap: 12px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+  background: linear-gradient(to bottom, var(--surface2), var(--surface));
+}
+
+.search-wrap { flex: 1; min-width: 200px; position: relative; }
+.search-wrap svg {
+  position: absolute; left: 12px; top: 50%;
+  transform: translateY(-50%); color: var(--text3); pointer-events: none;
+}
+.search-input {
+  width: 100%; padding: 10px 12px 10px 38px;
+  background: var(--bg); border: 1px solid var(--border2);
+  border-radius: var(--radius); color: var(--text);
+  font-family: 'Inter', sans-serif; font-size: 13px;
+  outline: none; transition: border-color .2s, box-shadow .2s;
+}
+.search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59,130,246,.12);
+}
+.search-input::placeholder { color: var(--text3); }
+
+/* ─── TABLE ──────────────────────────────────────────────────── */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; min-width: 640px; }
+
+th {
+  font-size: 10.5px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 1px; color: var(--text3);
+  padding: 12px 16px; text-align: left;
+  border-bottom: 1px solid var(--border);
+  background: rgba(0,0,0,.15);
+}
+
+td {
+  padding: 14px 16px; font-size: 13.5px;
+  border-bottom: 1px solid rgba(30,45,69,.6);
+  vertical-align: middle;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(59,130,246,.04); }
+
+.cell-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px; font-weight: 600;
+  color: var(--accent2);
+  background: rgba(59,130,246,.07);
+  padding: 3px 8px; border-radius: 5px;
+  display: inline-block;
+}
+.cell-nama strong { font-weight: 600; color: var(--text); }
+.cell-nama small { color: var(--text3); font-size: 11.5px; display: block; margin-top: 3px; }
+.cell-cert span { display: block; font-weight: 500; }
+.cell-cert small { color: var(--text3); font-size: 11.5px; }
+
+.status-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 4px 10px; border-radius: 20px;
+  border: 1px solid transparent; letter-spacing: .3px;
+}
+.status-pill::before { content: ''; width: 5px; height: 5px; border-radius: 50%; }
+.status-aktif       { background: rgba(34,197,94,.08);  border-color: rgba(34,197,94,.25);  color: #4ade80; }
+.status-aktif::before { background: #4ade80; box-shadow: 0 0 5px #4ade80; }
+.status-kedaluwarsa { background: rgba(245,158,11,.08); border-color: rgba(245,158,11,.25); color: #fbbf24; }
+.status-kedaluwarsa::before { background: #fbbf24; }
+.status-dicabut     { background: rgba(239,68,68,.08);  border-color: rgba(239,68,68,.25);  color: #f87171; }
+.status-dicabut::before { background: #f87171; }
+
+.empty-row td { text-align: center; padding: 48px; color: var(--text3); font-size: 14px; }
+
+/* ─── STATS BAR ──────────────────────────────────────────────── */
+.stats-bar {
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; gap: 20px;
+  font-size: 12px; color: var(--text3);
+  flex-wrap: wrap;
+  background: rgba(0,0,0,.1);
+}
+.stat-item { display: flex; align-items: center; gap: 6px; }
+.stat-item b { color: var(--text); }
+.stat-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+/* ─── LOADER ─────────────────────────────────────────────────── */
+.loader {
+  display: inline-block; width: 14px; height: 14px;
+  border: 2px solid var(--border2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── MODAL ──────────────────────────────────────────────────── */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,.75); backdrop-filter: blur(6px);
+  justify-content: center; align-items: center; z-index: 999;
+}
+.modal-overlay.open { display: flex; }
+
+.modal-box {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 14px;
+  width: 100%; max-width: 460px;
+  padding: 28px; margin: 16px;
+  animation: slideUp .2s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 24px 60px rgba(0,0,0,.5);
+}
+@keyframes slideUp { from { transform: translateY(24px); opacity: 0; } }
+
+.modal-title { font-size: 17px; font-weight: 700; margin-bottom: 22px; color: var(--text); }
+.modal-title span { color: var(--accent2); }
+
+.form-grid { display: grid; gap: 14px; }
+.form-group label {
+  display: block; font-size: 11px; font-weight: 700;
+  color: var(--text3); margin-bottom: 6px;
+  text-transform: uppercase; letter-spacing: .8px;
+}
+.form-group input, .form-group select {
+  width: 100%; padding: 10px 13px;
+  background: var(--bg); border: 1px solid var(--border2);
+  border-radius: var(--radius); color: var(--text);
+  font-family: 'Inter', sans-serif; font-size: 13.5px;
+  outline: none; transition: border-color .2s, box-shadow .2s;
+  -webkit-appearance: none; appearance: none;
+}
+.form-group input:focus, .form-group select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59,130,246,.12);
+}
+
+.modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+
+/* ─── CERT MODAL ─────────────────────────────────────────────── */
+.modal-cert-box {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 14px;
+  width: 100%; max-width: 760px;
+  max-height: 90vh; overflow-y: auto;
+  padding: 28px; margin: 16px;
+  animation: slideUp .2s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 24px 60px rgba(0,0,0,.5);
+}
+.modal-cert-title {
+  font-size: 17px; font-weight: 700; margin-bottom: 22px; color: var(--text);
+}
+.modal-cert-title span { color: var(--accent2); }
+.cert-modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 22px; }
+
+/* ─── TOAST ──────────────────────────────────────────────────── */
+#toast {
+  position: fixed; bottom: 28px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--surface2); border: 1px solid var(--border2);
+  border-radius: 10px; padding: 12px 20px;
+  font-size: 13.5px; font-weight: 500;
+  transition: transform .3s cubic-bezier(.34,1.56,.64,1), opacity .3s;
+  opacity: 0; z-index: 9999; white-space: nowrap;
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.4);
+}
+#toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+#toast.success { border-color: rgba(34,197,94,.4); color: #4ade80; }
+#toast.error   { border-color: rgba(239,68,68,.4);  color: #f87171; }
+#toast.info    { border-color: rgba(59,130,246,.4); color: var(--accent2); }
+
+/* ─── RESPONSIVE ─────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .header { flex-direction: column; align-items: flex-start; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CERTIFICATE DESIGN — Premium Landscape A4
+   ═══════════════════════════════════════════════════════════════ */
+.cert-preview {
+  width: 100%;
+  aspect-ratio: 1.4142; /* A4 landscape ratio */
+  background: #fff;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5%;
+  font-family: 'Inter', sans-serif;
+  color: #1a1f2e;
+}
+
+/* ── Gold border frame */
+.cert-preview::before {
+  content: '';
+  position: absolute; inset: 14px;
+  border: 2px solid #c8a84b;
+  border-radius: 4px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ── Outer border */
+.cert-preview::after {
+  content: '';
+  position: absolute; inset: 6px;
+  border: 1px solid rgba(200,168,75,.35);
+  border-radius: 5px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ── Background pattern */
+.cert-bg-pattern {
+  position: absolute; inset: 0;
+  background-image:
+    radial-gradient(circle at 15% 50%, rgba(200,168,75,.06) 0%, transparent 50%),
+    radial-gradient(circle at 85% 50%, rgba(200,168,75,.06) 0%, transparent 50%),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 36px,
+      rgba(200,168,75,.025) 36px,
+      rgba(200,168,75,.025) 37px
+    );
+  pointer-events: none;
+}
+
+/* ── Corner ornaments */
+.cert-corner {
+  position: absolute; width: 52px; height: 52px;
+  pointer-events: none; z-index: 6;
+}
+.cert-corner svg { width: 100%; height: 100%; }
+.cert-corner.tl { top: 18px; left: 18px; }
+.cert-corner.tr { top: 18px; right: 18px; transform: scaleX(-1); }
+.cert-corner.bl { bottom: 18px; left: 18px; transform: scaleY(-1); }
+.cert-corner.br { bottom: 18px; right: 18px; transform: scale(-1); }
+
+/* ── Watermark */
+.cert-watermark {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 120px; opacity: .03;
+  font-weight: 900; color: #1a1f2e;
+  pointer-events: none; user-select: none;
+  transform: rotate(-20deg);
+  font-family: 'Playfair Display', serif;
+  letter-spacing: -3px;
+}
+
+/* ── Side bars */
+.cert-sidebar-left,
+.cert-sidebar-right {
+  position: absolute; top: 22px; bottom: 22px; width: 5px;
+  background: linear-gradient(to bottom, transparent 0%, #c8a84b 20%, #c8a84b 80%, transparent 100%);
+  pointer-events: none;
+}
+.cert-sidebar-left  { left: 28px; }
+.cert-sidebar-right { right: 28px; }
+
+/* ── Content layers */
+.cert-content {
+  position: relative; z-index: 10;
+  text-align: center; width: 100%; max-width: 600px;
+}
+
+.cert-instansi-label {
+  font-size: 9px; letter-spacing: 4px;
+  text-transform: uppercase; color: #9a7d3a;
+  font-weight: 700; margin-bottom: 4px;
+}
+
+.cert-instansi-name {
+  font-size: 13px; font-weight: 600; color: #2a2020;
+  letter-spacing: .5px; margin-bottom: 14px;
+}
+
+.cert-ornament {
+  display: flex; align-items: center; gap: 12px;
+  justify-content: center; margin-bottom: 12px;
+}
+.cert-ornament-line {
+  flex: 1; height: 1px;
+  background: linear-gradient(to right, transparent, #c8a84b, transparent);
+  max-width: 80px;
+}
+.cert-ornament-star { color: #c8a84b; font-size: 14px; }
+
+.cert-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 38px; font-weight: 700; color: #1a1f2e;
+  line-height: 1; letter-spacing: -1px;
+  margin-bottom: 2px;
+}
+.cert-title-accent {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px; font-style: italic; color: #9a7d3a;
+  letter-spacing: 3px; margin-bottom: 16px;
+}
+
+.cert-divider {
+  width: 48px; height: 2px;
+  background: linear-gradient(90deg, transparent, #c8a84b, transparent);
+  margin: 0 auto 12px;
+}
+
+.cert-presented {
+  font-size: 11px; color: #888; font-style: italic; letter-spacing: .5px;
+  margin-bottom: 6px;
+}
+
+.cert-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px; font-weight: 700; color: #1a1f2e;
+  letter-spacing: -.3px;
+  border-bottom: 2px solid #c8a84b;
+  display: inline-block; padding-bottom: 5px;
+  margin-bottom: 14px;
+}
+
+/* Info grid */
+.cert-info-row {
+  display: flex; justify-content: center; gap: 28px;
+  flex-wrap: wrap; margin-bottom: 16px;
+}
+.cert-info-chip {
+  text-align: center;
+}
+.cert-info-chip label {
+  display: block; font-size: 8.5px; letter-spacing: 1.8px;
+  text-transform: uppercase; color: #aaa; font-weight: 700;
+  margin-bottom: 3px;
+}
+.cert-info-chip span {
+  font-size: 12px; font-weight: 600; color: #2a2020;
+}
+
+/* ID & Status row */
+.cert-meta-row {
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; margin-bottom: 14px;
+}
+.cert-id {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; font-weight: 600; letter-spacing: 1.5px;
+  background: #f8f4e8; border: 1px solid #ddc878;
+  color: #9a7d3a; padding: 4px 12px; border-radius: 20px;
+}
+.cert-status-badge {
+  font-size: 9px; font-weight: 700; letter-spacing: 1.5px;
+  text-transform: uppercase; padding: 4px 12px; border-radius: 20px;
+  border: 1px solid transparent;
+}
+.cert-status-aktif       { background: #edf7ef; color: #1e6e34; border-color: #a8d5b5; }
+.cert-status-kedaluwarsa { background: #fef8e6; color: #7a5a0a; border-color: #d5c585; }
+.cert-status-dicabut     { background: #fde8e8; color: #7a1a1a; border-color: #d5a5a5; }
+
+/* Footer signatures */
+.cert-footer {
+  display: grid; grid-template-columns: 1fr auto 1fr;
+  align-items: end; gap: 20px;
+  padding-top: 12px;
+  border-top: 1px solid #e8e0c8;
+  width: 100%;
+}
+.cert-sign { text-align: center; }
+.cert-sign .sign-space { height: 28px; }
+.cert-sign .sign-line {
+  width: 100px; height: 1px; background: #bbb;
+  margin: 0 auto 5px;
+}
+.cert-sign small {
+  font-size: 8.5px; text-transform: uppercase;
+  letter-spacing: 1.5px; color: #999;
+}
+
+.cert-seal {
+  width: 56px; height: 56px;
+  border: 2px solid #c8a84b;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+.cert-seal::before {
+  content: '';
+  position: absolute; inset: 4px;
+  border: 1px solid rgba(200,168,75,.5);
+  border-radius: 50%;
+}
+.cert-seal svg { width: 28px; height: 28px; color: #c8a84b; }
+
+/* ─── PRINT STYLES ───────────────────────────────────────────── */
+
+/* printArea always hidden on screen */
+#printArea { display: none; }
+
+@media print {
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+
+  /* Hide everything on screen */
+  body > * { display: none !important; }
+
+  /* Show only printArea */
+  #printArea {
+    display: block !important;
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: #fff !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .print-page {
+    width: 100%;
+    height: 100vh;
+    page-break-after: always;
+    page-break-inside: avoid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10mm;
+    background: #fff !important;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  /* Last page — no extra blank page */
+  .print-page:last-child {
+    page-break-after: avoid;
+  }
+
+  .cert-preview {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    aspect-ratio: unset !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    flex-shrink: 0;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* Ensure all decorative elements print */
+  .cert-bg-pattern,
+  .cert-watermark,
+  .cert-sidebar-left,
+  .cert-sidebar-right,
+  .cert-corner,
+  .cert-preview::before,
+  .cert-preview::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<div class="header">
+  <div class="header-brand">
+    <div class="brand-icon">🎓</div>
+    <div>
+      <div class="brand-title">Papan Sertifikat Digital</div>
+      <div class="brand-sub">Terhubung ke Google Sheets · CRUD Real-time</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <span id="badgeMode" class="badge-mode">● Publik</span>
+    <button id="btnAdmin" class="btn btn-accent" onclick="toggleAdmin()">Masuk Admin</button>
+  </div>
+</div>
+
+<!-- ── MAIN CARD ── -->
+<div class="card">
+  <div class="card-toolbar">
+    <div class="search-wrap">
+      <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="text" id="searchBox" class="search-input"
+        placeholder="Cari nama atau sertifikat..."
+        oninput="filterData()">
+    </div>
+    <button id="btnTambah" class="btn btn-green" style="display:none" onclick="openForm('tambah')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M12 5v14M5 12h14"/></svg>
+      Tambah
+    </button>
+    <button onclick="loadData()" class="btn btn-ghost" title="Refresh data">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4-4.64 4.36A9 9 0 0 1 3.51 15"/></svg>
+      Refresh
+    </button>
+
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>ID</th>
+          <th>Penerima</th>
+          <th>Sertifikat</th>
+          <th>Status</th>
+          <th id="thAksi" style="display:none">Tindakan</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr class="empty-row"><td colspan="6">
+          <span class="loader"></span>&nbsp; Menghubungkan ke Google Sheets...
+        </td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="stats-bar" id="statsBar" style="display:none">
+    <span class="stat-item">
+      <span class="stat-dot" style="background:var(--text3)"></span>
+      Total: <b id="statTotal">0</b>
+    </span>
+    <span class="stat-item">
+      <span class="stat-dot" style="background:var(--green)"></span>
+      Aktif: <b id="statAktif">0</b>
+    </span>
+    <span class="stat-item">
+      <span class="stat-dot" style="background:var(--yellow)"></span>
+      Kedaluwarsa: <b id="statKadul">0</b>
+    </span>
+    <span class="stat-item">
+      <span class="stat-dot" style="background:var(--red)"></span>
+      Dicabut: <b id="statDicabut">0</b>
+    </span>
+  </div>
+</div>
+
+<!-- ── MODAL FORM ── -->
+<div id="modalForm" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-title" id="modalTitle">Tambah <span>Sertifikat</span></div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>Nama Lengkap Penerima</label>
+        <input type="text" id="inp_nama" placeholder="Contoh: Budi Santoso" required>
+      </div>
+      <div class="form-group">
+        <label>Nama Kursus / Sertifikat</label>
+        <select id="inp_sertifikat">
+          <option value="Algoritma Pemrograman 3">Algoritma Pemrograman 3</option>
+          <option value="Manajemen Proyek TI">Manajemen Proyek TI</option>
+          <option value="TOEFL English Course">TOEFL English Course</option>
+          <option value="Dasar Jaringan Komputer">Dasar Jaringan Komputer</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Instansi Penyelenggara</label>
+        <select id="inp_instansi">
+          <option value="Universitas Informatika">Universitas Informatika</option>
+          <option value="Gedung Diklat Pemda">Gedung Diklat Pemda</option>
+          <option value="Lembaga Bahasa Internasional">Lembaga Bahasa Internasional</option>
+          <option value="Cisco Academy">Cisco Academy</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Kategori</label>
+        <select id="inp_kategori">
+          <option value="Kompetensi Teknis">Kompetensi Teknis</option>
+          <option value="Manajemen">Manajemen</option>
+          <option value="Bahasa">Bahasa</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Status Masa Berlaku</label>
+        <select id="inp_status">
+          <option value="Aktif">Aktif</option>
+          <option value="Kedaluwarsa">Kedaluwarsa</option>
+          <option value="Dicabut">Dicabut</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeForm()">Batal</button>
+      <button class="btn btn-accent" onclick="submitForm()">Simpan Data</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── MODAL PREVIEW SERTIFIKAT ── -->
+<div id="modalCert" class="modal-overlay">
+  <div class="modal-cert-box">
+    <div class="modal-cert-title">Preview <span>Sertifikat Digital</span></div>
+    <div id="certPreviewContainer"></div>
+    <div class="cert-modal-footer">
+      <button class="btn btn-ghost" onclick="closeCert()">Tutup</button>
+      <button class="btn btn-teal" onclick="printCert()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Cetak / Simpan PDF
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── AREA CETAK ── -->
+<div id="printArea"></div>
+
+<!-- ── TOAST ── -->
+<div id="toast"></div>
+
+<script>
+/* ─────────────────────────────────────────────────────────────── */
+/*  KONFIGURASI                                                    */
+/* ─────────────────────────────────────────────────────────────── */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAjUkfZZMz6ep-Le3jcJwhM6z48c5X08MFRaVGxcyqJLamLEum30K-WF72rNrBK4raKQ/exec";
+
+let DATA     = [];
+let IS_ADMIN = false;
+let AUTH     = { username: "", password: "" };
+let MODE     = "tambah";
+let TARGET   = null;
+
+/* ── TOAST ───────────────────────────────────────────────────── */
+let _toastTimer;
+function toast(msg, type = "info") {
+  const el = document.getElementById("toast");
+  const icons = { success: "✓", error: "✕", info: "ℹ" };
+  el.className = `show ${type}`;
+  el.innerHTML = `${icons[type] || "ℹ"} ${msg}`;
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => { el.className = ""; }, 3200);
+}
+
+/* ── LOAD DATA ───────────────────────────────────────────────── */
+async function loadData() {
+  setTableLoading("Memuat data dari Google Sheets...");
+  try {
+    const res  = await fetch(SCRIPT_URL + "?t=" + Date.now());
+    const json = await res.json();
+    if (json.status === "error") { toast(json.message, "error"); return; }
+    DATA = json;
+    renderTable(DATA);
+    updateStats(DATA);
+    toast("Data berhasil dimuat", "success");
+  } catch (e) {
+    setTableError("Gagal terhubung. Periksa URL Apps Script.");
+  }
+}
+
+/* ── RENDER ──────────────────────────────────────────────────── */
+function renderTable(rows) {
+  const tbody = document.getElementById("tableBody");
+  document.getElementById("thAksi").style.display    = "table-cell";
+  document.getElementById("btnTambah").style.display = IS_ADMIN ? "inline-flex" : "none";
+
+  if (!rows || rows.length === 0) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="6">Tidak ada data ditemukan.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = rows.map(r => {
+    const no       = r.no        || r.No        || "";
+    const id       = r.id        || r.Id        || r.ID        || "";
+    const nama     = r.nama      || r.Nama      || "";
+    const sertif   = r.sertifikat|| r.Sertifikat|| "";
+    const instansi = r.instansi  || r.Instansi  || "";
+    const kategori = r.kategori  || r.Kategori  || "";
+    const status   = r.status    || r.Status    || "";
+
+    const pill = status.toLowerCase() === "aktif"       ? "status-aktif"
+               : status.toLowerCase() === "kedaluwarsa" ? "status-kedaluwarsa"
+               : "status-dicabut";
+
+    const aksiCell = IS_ADMIN
+      ? `<td>
+          <button class="btn btn-accent btn-sm" onclick="openForm('edit',${no})">Edit</button>
+          <button class="btn btn-red btn-sm"    onclick="hapus(${no})">Hapus</button>
+          <button class="btn btn-ghost btn-sm"  onclick="previewCert(${no})">🖨 Cetak</button>
+         </td>`
+      : `<td>
+          <button class="btn btn-ghost btn-sm" onclick="previewCert(${no})">🖨 Cetak PDF</button>
+         </td>`;
+
+    return `
+      <tr>
+        <td style="color:var(--text3);font-size:12px;font-weight:600">${no}</td>
+        <td><span class="cell-id">${id}</span></td>
+        <td class="cell-nama"><strong>${nama}</strong><small>${instansi}</small></td>
+        <td class="cell-cert"><span>${sertif}</span><small>${kategori}</small></td>
+        <td><span class="status-pill ${pill}">${status || "—"}</span></td>
+        ${aksiCell}
+      </tr>`;
+  }).join("");
+}
+
+function updateStats(rows) {
+  document.getElementById("statsBar").style.display  = "flex";
+  document.getElementById("statTotal").textContent   = rows.length;
+  document.getElementById("statAktif").textContent   = rows.filter(r => (r.status||r.Status||"").toLowerCase() === "aktif").length;
+  document.getElementById("statKadul").textContent   = rows.filter(r => (r.status||r.Status||"").toLowerCase() === "kedaluwarsa").length;
+  document.getElementById("statDicabut").textContent = rows.filter(r => (r.status||r.Status||"").toLowerCase() === "dicabut").length;
+}
+
+function setTableLoading(msg) {
+  document.getElementById("tableBody").innerHTML =
+    `<tr class="empty-row"><td colspan="6"><span class="loader"></span>&nbsp; ${msg}</td></tr>`;
+}
+function setTableError(msg) {
+  document.getElementById("tableBody").innerHTML =
+    `<tr class="empty-row"><td colspan="6" style="color:var(--red)">${msg}</td></tr>`;
+}
+
+/* ── FILTER ──────────────────────────────────────────────────── */
+function filterData() {
+  const q = document.getElementById("searchBox").value.toLowerCase();
+  renderTable(DATA.filter(r =>
+    (r.nama||r.Nama||"").toLowerCase().includes(q) ||
+    (r.sertifikat||r.Sertifikat||"").toLowerCase().includes(q)
+  ));
+}
+
+/* ── ADMIN ───────────────────────────────────────────────────── */
+async function toggleAdmin() {
+  if (IS_ADMIN) {
+    IS_ADMIN = false;
+    AUTH = { username: "", password: "" };
+    document.getElementById("badgeMode").className = "badge-mode";
+    document.getElementById("badgeMode").textContent = "● Publik";
+    document.getElementById("btnAdmin").textContent = "Masuk Admin";
+    renderTable(DATA);
+    toast("Keluar dari mode admin", "info");
+  } else {
+    const user = prompt("Username Admin:");
+    if (!user) return;
+    const pass = prompt("Password Admin:");
+    if (!pass) return;
+    try {
+      const res = await fetch(SCRIPT_URL, {
+        method: "POST",
+        body: JSON.stringify({ action: "login", auth: { username: user, password: pass } })
+      });
+      const json = await res.json();
+      if (json.status === "success") {
+        AUTH = { username: user, password: pass };
+        IS_ADMIN = true;
+        document.getElementById("badgeMode").className = "badge-mode admin";
+        document.getElementById("badgeMode").textContent = "✓ Admin Aktif";
+        document.getElementById("btnAdmin").textContent = "Keluar Admin";
+        renderTable(DATA);
+        toast("Login berhasil! Mode admin aktif", "success");
+      } else {
+        toast("Username atau Password salah!", "error");
+      }
+    } catch (e) {
+      toast("Koneksi gagal saat login.", "error");
+    }
+  }
+}
+
+/* ── FORM ────────────────────────────────────────────────────── */
+function openForm(mode, no = null) {
+  MODE   = mode;
+  TARGET = no !== null ? Number(no) : null;
+  if (mode === "tambah") {
+    document.getElementById("modalTitle").innerHTML = 'Tambah <span>Sertifikat</span>';
+    document.getElementById("inp_nama").value = "";
+    document.getElementById("inp_sertifikat").selectedIndex = 0;
+    document.getElementById("inp_instansi").selectedIndex   = 0;
+    document.getElementById("inp_kategori").selectedIndex   = 0;
+    document.getElementById("inp_status").selectedIndex     = 0;
+  } else {
+    const item = DATA.find(r => Number(r.no||r.No) === Number(no));
+    if (!item) { toast("Data tidak ditemukan", "error"); return; }
+    document.getElementById("modalTitle").innerHTML = `Edit <span>No. ${no}</span>`;
+    document.getElementById("inp_nama").value       = item.nama      || item.Nama      || "";
+    document.getElementById("inp_sertifikat").value = item.sertifikat|| item.Sertifikat|| "";
+    document.getElementById("inp_instansi").value   = item.instansi  || item.Instansi  || "";
+    document.getElementById("inp_kategori").value   = item.kategori  || item.Kategori  || "";
+    document.getElementById("inp_status").value     = item.status    || item.Status    || "";
+  }
+  document.getElementById("modalForm").classList.add("open");
+}
+
+function closeForm() { document.getElementById("modalForm").classList.remove("open"); }
+
+async function submitForm() {
+  const nama = document.getElementById("inp_nama").value.trim();
+  if (!nama) { toast("Nama wajib diisi!", "error"); return; }
+
+  let existingId = "ID-" + (Math.floor(100 + Math.random() * 900));
+  if (MODE === "edit") {
+    const old = DATA.find(r => Number(r.no||r.No) === TARGET);
+    existingId = old?.id || old?.Id || existingId;
+  }
+
+  const payload = {
+    no:         TARGET,
+    id:         existingId,
+    nama,
+    sertifikat: document.getElementById("inp_sertifikat").value,
+    instansi:   document.getElementById("inp_instansi").value,
+    kategori:   document.getElementById("inp_kategori").value,
+    status:     document.getElementById("inp_status").value,
+  };
+
+  closeForm();
+  setTableLoading("Menyimpan ke Google Sheets...");
+
+  try {
+    const res  = await fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: MODE, payload, auth: AUTH })
+    });
+    const json = await res.json();
+    toast(json.status === "success" ? json.message : (json.message || "Gagal menyimpan."),
+          json.status === "success" ? "success" : "error");
+  } catch (e) {
+    toast("Koneksi gagal. Coba lagi.", "error");
+  }
+  setTimeout(loadData, 1200);
+}
+
+async function hapus(no) {
+  if (!confirm(`Hapus data nomor ${no}?`)) return;
+  setTableLoading("Menghapus data...");
+  try {
+    const res  = await fetch(SCRIPT_URL, {
+      method: "POST",
+      body: JSON.stringify({ action: "delete", payload: { no }, auth: AUTH })
+    });
+    const json = await res.json();
+    toast(json.status === "success" ? json.message : (json.message || "Gagal hapus."),
+          json.status === "success" ? "success" : "error");
+  } catch (e) {
+    toast("Koneksi gagal.", "error");
+  }
+  setTimeout(loadData, 1200);
+}
+
+/* ── CORNER ORNAMENT SVG ─────────────────────────────────────── */
+function cornerSVG() {
+  return `<svg viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 2 L18 2 M2 2 L2 18" stroke="#c8a84b" stroke-width="2" stroke-linecap="round"/>
+    <path d="M4 8 L8 4" stroke="#c8a84b" stroke-width="1" stroke-linecap="round" opacity=".5"/>
+    <circle cx="2" cy="2" r="2.5" fill="#c8a84b"/>
+    <path d="M12 2 L18 8 L12 14" stroke="#c8a84b" stroke-width=".8" opacity=".3" fill="none"/>
+  </svg>`;
+}
+
+/* ── BUILD CERTIFICATE HTML ──────────────────────────────────── */
+function buildCertHTML(r) {
+  const id       = r.id        || r.Id        || r.ID        || "—";
+  const nama     = r.nama      || r.Nama      || "—";
+  const sertif   = r.sertifikat|| r.Sertifikat|| "—";
+  const instansi = r.instansi  || r.Instansi  || "—";
+  const kategori = r.kategori  || r.Kategori  || "—";
+  const status   = r.status    || r.Status    || "—";
+
+  const statusClass = status.toLowerCase() === "aktif"       ? "cert-status-aktif"
+                    : status.toLowerCase() === "kedaluwarsa" ? "cert-status-kedaluwarsa"
+                    : "cert-status-dicabut";
+
+  const today = new Date().toLocaleDateString("id-ID", {
+    day: "2-digit", month: "long", year: "numeric"
+  });
+
+  return `
+  <div class="cert-preview">
+    <!-- Background & Decorative Layers -->
+    <div class="cert-bg-pattern"></div>
+    <div class="cert-watermark">SERTIFIKAT</div>
+    <div class="cert-sidebar-left"></div>
+    <div class="cert-sidebar-right"></div>
+
+    <!-- Corner Ornaments -->
+    <div class="cert-corner tl">${cornerSVG()}</div>
+    <div class="cert-corner tr">${cornerSVG()}</div>
+    <div class="cert-corner bl">${cornerSVG()}</div>
+    <div class="cert-corner br">${cornerSVG()}</div>
+
+    <!-- Main Content -->
+    <div class="cert-content">
+      <div class="cert-instansi-label">Lembaga Pendidikan &amp; Pelatihan Profesional</div>
+      <div class="cert-instansi-name">${instansi}</div>
+
+      <div class="cert-ornament">
+        <div class="cert-ornament-line"></div>
+        <span class="cert-ornament-star">✦</span>
+        <div class="cert-ornament-line"></div>
+      </div>
+
+      <div class="cert-title">Sertifikat</div>
+      <div class="cert-title-accent">of Completion &amp; Achievement</div>
+
+      <div class="cert-divider"></div>
+
+      <div class="cert-presented">Dengan bangga diberikan kepada</div>
+      <div class="cert-name">${nama}</div>
+
+      <div class="cert-info-row">
+        <div class="cert-info-chip">
+          <label>Program / Kursus</label>
+          <span>${sertif}</span>
+        </div>
+        <div class="cert-info-chip">
+          <label>Kategori</label>
+          <span>${kategori}</span>
+        </div>
+        <div class="cert-info-chip">
+          <label>Tanggal Terbit</label>
+          <span>${today}</span>
+        </div>
+      </div>
+
+      <div class="cert-meta-row">
+        <span class="cert-id">ID: ${id}</span>
+        <span class="cert-status-badge ${statusClass}">${status}</span>
+      </div>
+
+      <div class="cert-footer">
+        <div class="cert-sign">
+          <div class="sign-space"></div>
+          <div class="sign-line"></div>
+          <small>Pimpinan Lembaga</small>
+        </div>
+        <div class="cert-seal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+          </svg>
+        </div>
+        <div class="cert-sign">
+          <div class="sign-space"></div>
+          <div class="sign-line"></div>
+          <small>Penerima</small>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ── PREVIEW CERT ────────────────────────────────────────────── */
+let _currentPrintItem = null;
+
+function previewCert(no) {
+  const item = DATA.find(r => Number(r.no||r.No) === Number(no));
+  if (!item) { toast("Data tidak ditemukan", "error"); return; }
+  _currentPrintItem = item;
+  document.getElementById("certPreviewContainer").innerHTML = buildCertHTML(item);
+  document.getElementById("modalCert").classList.add("open");
+}
+
+function closeCert() { document.getElementById("modalCert").classList.remove("open"); }
+
+/* ── PRINT SINGLE ────────────────────────────────────────────── */
+function printCert() {
+  if (!_currentPrintItem) return;
+  const pa = document.getElementById("printArea");
+  // Rebuild fresh — single page, no leftovers
+  pa.innerHTML = `<div class="print-page">${buildCertHTML(_currentPrintItem)}</div>`;
+  window.print();
+}
+
+/* ── PRINT ALL ───────────────────────────────────────────────── */
+function cetakSemua() {
+  if (!DATA || DATA.length === 0) { toast("Tidak ada data untuk dicetak", "error"); return; }
+  const q = document.getElementById("searchBox").value.toLowerCase();
+  const filtered = q
+    ? DATA.filter(r =>
+        (r.nama||r.Nama||"").toLowerCase().includes(q) ||
+        (r.sertifikat||r.Sertifikat||"").toLowerCase().includes(q))
+    : DATA;
+  if (filtered.length === 0) { toast("Tidak ada data yang cocok", "error"); return; }
+
+  const pa = document.getElementById("printArea");
+  pa.innerHTML = filtered.map(r =>
+    `<div class="print-page">${buildCertHTML(r)}</div>`
+  ).join("");
+
+  toast(`Mencetak ${filtered.length} sertifikat...`, "success");
+  // Small delay so toast renders before print dialog
+  setTimeout(() => window.print(), 120);
+}
+
+/* ── CLOSE ON BACKDROP ───────────────────────────────────────── */
+document.getElementById("modalCert").addEventListener("click", function(e) {
+  if (e.target === this) closeCert();
+});
+document.getElementById("modalForm").addEventListener("click", function(e) {
+  if (e.target === this) closeForm();
+});
+
+/* ── INIT ────────────────────────────────────────────────────── */
+loadData();
+</script>
+</body>
+</html>
